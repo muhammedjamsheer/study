@@ -1,0 +1,149 @@
+employee_create.component.html
+______________________
+
+          <div class="col-lg-6">
+            <div class="image-section">
+              <img class="img-thumbnail" *ngIf="url !=''" [src]="url" width="100px">
+              <input type="file" id="image" (change)="onSelectedFile($event)" />
+              <div [innerHTML]="uploadError" class="error"></div>
+            </div>
+          </div>
+
+*******************************************************************************
+employee_create.component.ts
+_____________________
+  baseurl = "http://localhost/bookmyshow/public/images/crews/";
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      if (typeof (params.id) != "undefined") {
+        this.editflag = true;
+        this.myservice.employees_edit(params.id).subscribe(res => {
+          this.employeeForm.patchValue({
+            name: res['name'],
+            address: res['address'],
+          });
+          this.url = this.baseurl + res['image'];
+
+        });
+      }
+    });
+}
+  url = '';
+  onSelectedFile(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.employeeForm.get('image').setValue(file);
+    }
+    // image preview before upload
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+      reader.onload = (event: any) => { // called once readAsDataURL is completed
+        this.url = event.target.result;
+      }
+    }
+  }
+
+
+ onSubmit() {
+
+    const formData = new FormData();
+
+    formData.append('name', this.employeeForm.get('name').value);
+    formData.append('image', this.employeeForm.get('image').value);
+
+
+
+      this.userService.add_employee(this.employeeForm.value)
+          .subscribe(
+              data => {
+                if(data['message_type']=='success'){
+                  this.notifier.notify("success", data['message']); 
+                }
+               
+              },
+              error => {
+                this.notifier.notify("error", "invalid email or password!");
+              });
+  }
+**********************************************************************************
+employee_list.component.html
+____________________
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      Customers
+      <button routerLink="customer_create" class="btn btn-info float-right">Add</button>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped ">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Mobile</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let user of employees">
+              <td>{{user.name}}</td>
+              <td>{{user.address}}</td>
+              <td>{{user.mobile}}</td>
+              <td><button class="btn btn-danger btn-sm" (click)="deleteUser(user.id)"> Delete</button> &nbsp;
+                <button class="btn btn-info btn-sm" routerLink="edit/{{user.id}}"> Edit</button></td>
+            </tr>
+            </tbody>
+          </table>
+    </div>
+  </div>
+</div>
+**********************************************************************************
+employee_list.component.ts
+________________
+  ngOnInit() {
+    this.getall_employees();
+  }
+    getall_employees() {
+    this.Service.getall_employees().subscribe(
+        res => {
+          this.customers = res['data'];
+        });
+  }
+  deleteUser(id: string) {
+    this.Service.delete_customers(id).subscribe(data => {
+      if (data['message'] == 'success') {
+        this.getall_employees();
+      }
+    });
+  }
+**********************************************************************************
+employee_service.ts
+___________________
+	import { HttpClient } from '@angular/common/http';
+	constructor(private http: HttpClient,)
+
+    create_employee($data) {
+        return this.http.post(this.baseApiUrl + '/create_employee', $data);
+    }
+
+    getall_employees($data) {
+        return this.http.get(this.baseApiUrl + '/getall_employees', $data);
+    }
+    delete_employees($id) {
+        return this.http.get(this.baseApiUrl + '/delete_employees/' + $id);
+    }
+    employees_edit($data) {
+
+        return this.http.get(this.baseApiUrl + '/employees_edit/' + $data);
+    }
+	change_jrnlStatus($jnlid: string, $status: boolean) {
+	    var jsonObject = {};
+	    jsonObject['jnlid'] = $jnlid;
+	    jsonObject['status'] = $status;
+	    return this.http.post(this.env.baseAPIUrl + '/change_jrnlStatus', jsonObject);
+	}
+
+
+
+

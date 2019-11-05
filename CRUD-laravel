@@ -1,0 +1,77 @@
+
+Laravel api
+.................................................................................
+Route::post('create_employee', 'employeeController@create_employee');
+Route::get('delete_employee/{id}', 'employeeController@delete_employee');
+
+Laravel controller
+...............................................................................
+use App\Employee;
+use validate;
+
+  public function add_employee(Request $request)
+    {
+
+        request()->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+        request()->image->move(public_path('images'), $imageName);
+
+        $form_data = array(
+            'name'            => $request->firstName,
+            'mobile'          =>  $request->mobile,
+            'address'         =>  $request->address,
+            'image'           =>   $imageName,
+            );
+            $data = Employee::create($form_data);
+            $results['message_type'] = 'success';
+            $results['message'] = 'Employee created succesfully';
+            return response()->json($results, 200);
+
+           if( $request->input('movie_id')){//editing
+            $data =  Movies::where('id', $request->movie_id)->update( $form_data);
+            }
+    }
+    public function getall_employees()
+    {
+        $data = Employee::get();
+          return response()->json($data);
+    }
+    public function employees_edit($id)
+    {
+         $movies = Employee::with('district')->where('id',$id)->first();
+          return response()->json( $movies);
+    }
+    public function delete_employee($id){
+    	$data = Employee::where('id',$id)->first();
+
+    	$image_path = 'images/'.$data['image']; 
+
+    	if(file_exists(public_path('images/'.$data['image']))){
+    		unlink(public_path('images/'.$data['image']));
+    	}else{
+    		dd('File does not exists.');
+    	}
+    	$data->delete();
+    	if($data){
+    		$results['message_type'] = 'success';
+    		$results['message'] = 'Employee deleted succesfully';
+    	}
+    	return response()->json( $results);
+    }
+
+
+.........................................................
+Laravel Model
+
+   public $table='employees';
+    protected $fillable = [
+     'name','mobile',
+    ];
+    public function screen(){
+        return $this->belongsTo('App\Screen','screen_id','id');
+    }
+     public function district(){
+        return $this->hasMany('App\theater','location','id');
+    }

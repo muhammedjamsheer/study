@@ -19,7 +19,11 @@ add bootsrap
 	  "src/styles.css",
 	  "node_modules/bootstrap/dist/css/bootstrap.min.css"
 	],
-
+............................................................
+routing
+    import { Router, ActivatedRoute } from '@angular/router';
+    constructor(private route: ActivatedRoute, private router: Router, )
+    this.router.navigate(['/home']);
 .............................................................
 Angular notifier
     npm install angular-notifier
@@ -35,3 +39,6 @@ Angular notifier
 
     app.component.html
         <notifier-container></notifier-container> 
+..............................................................
+Angular modal
+   https://www.npmjs.com/package/ngb-modal
