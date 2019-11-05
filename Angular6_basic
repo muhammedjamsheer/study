@@ -4,7 +4,7 @@ install angular
 	ng new project_name
 	cd project_name
 	ng serve --open
-    ng serve --poll=2000 --port 4201
+        ng serve --poll=2000 --port 4201
 ............................................................
 generate 
   	ng generate module employees --routing
