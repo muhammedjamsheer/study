@@ -20,4 +20,18 @@ add bootsrap
 	  "node_modules/bootstrap/dist/css/bootstrap.min.css"
 	],
 
+.............................................................
+Angular notifier
+    npm install angular-notifier
 
+    app.module.ts
+        import { NotifierModule } from 'angular-notifier'; 
+        imports: [NotifierModule],
+
+    your.component.ts
+    	import { NotifierService } from "angular-notifier";
+    	constructor( private notifier: NotifierService )
+    	this.notifier.notify("success", "You are awesome! I mean it!");
+
+    app.component.html
+        <notifier-container></notifier-container> 
