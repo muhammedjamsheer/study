@@ -1,0 +1,80 @@
+
+
+image preview before upload 
+
+https://www.truecodex.com/course/angular-project-training/crud-2-create-edit-and-delete-blog-with-file-upload-angular
+.........................................
+ANGULAR6
+
+<div class="form-group">
+	<img [src]="url" width="100px">
+	<input type="file" id="image" (change)="onSelectedFile($event)" />
+	<div [innerHTML]="uploadError" class="error"></div>
+</div>
+
+url='';
+onSelectedFile(event) {
+  if (event.target.files.length > 0) {
+    const file = event.target.files[0];
+    this.employeeForm.get('image').setValue(file);
+  }
+  if (event.target.files && event.target.files[0]) {
+    var reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]); 
+    reader.onload = (event: any) => { 
+      this.url = event.target.result;
+    }
+  }
+}
+
+.......................................
+SERVICE
+
+import { HttpClient } from '@angular/common/http';
+export class UserService {
+  constructor(private http: HttpClient) { }
+
+  baseApiUrl= 'http://192.168.112.187/jwtauth/public/api/';
+
+  get_employee($id) {
+    return this.http.get(this.baseApiUrl + 'get_employee/'+ $id);
+  }
+  add_employee($data) {
+    return this.http.post(this.baseApiUrl + 'add_employee',$data);
+  }
+}
+....................................................
+API
+
+Route::get('get_employee/{id}', 'employeeController@get_employee');
+Route::post('add_employee', 'employeeController@add_employee');
+........................................
+LARAVEL
+
+public function add_employee(Request $request)
+{
+    request()->validate([
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+    $imageName = time().'.'.request()->image->getClientOriginalExtension();
+    request()->image->move(public_path('images'), $imageName);
+
+    $form_data = array(
+     'name'       => $request->firstName,
+    'image'           =>   $imageName,
+    );
+
+    $data = Employee::create($form_data);
+    $results['message_type'] = 'success';
+    $results['message'] = 'Employee created succesfully';
+    return response()->json($results, 200); 
+  }
+...............................................
+  Model
+  class Employee extends Model
+{
+    public $table='employees';
+    protected $fillable = [
+        'name', 'mobile', 'address','image'
+    ];
+}
