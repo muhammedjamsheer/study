@@ -1,0 +1,83 @@
+
+
+laravel installation
+..............................
+	composer create-project --prefer-dist laravel/laravel blog
+	change env.example to .env
+	cd blog
+	php artisan serve
+	php artisan key:generate
+
+create table
+.........................
+	php artisan make:migration create_users_table
+	php artisan migrate
+
+create controller & model
+..........................
+	php artisan make:controller userController 
+	php artisan make:model User 
+
+routing
+..........................
+	href={{url('/user')}}
+	Route::get('/departments', 'departmentController@index');
+
+
+    href={{route('/user')}}
+	Route::post('/delete/{id}', 'departmentController@destroy')->name('delete');
+
+
+
+
+create
+......................
+	$user = Userrole::create([
+		    'first_name' => 'Chris',
+		    'email' => 'cmgmyr@gmail.com',
+
+		    ]);
+select
+.....................
+ $data = userrole::select('rolename','role')->get();
+update
+......................
+	$user = Userrole::find(1);
+	$user->update(['email' => 'me@chrisgmyr.com',]);
+
+deleting
+...........
+	$user = User::find(1);
+	$user->delete();
+
+get queries
+....................
+	 1) $data = Userrole::all();
+	 2) $data = Userrole::findOrFail($id);
+	 3) $data = Userrole::select('id','rl_role_name',)->get();
+	 4) $data = Userrole::where('id', $id)->get();
+	 5) $data = Userrole::where('status',true)->where('id', $id)->get();
+	 6) $data = Userrole::where('rl_parent_role','!=',null)->get();
+	 7) $data  = Userrole::where('id', $id)->orderBy('usr_created_date','desc')
+
+
+
+one to one relation(each state has one capital)
+...............
+
+   """"state controller""""""
+  $data = State::with('get_capital')->get();
+
+  """""State model""""""
+         public function get_capital(){
+    	return $this->belongsTo('App\Capital','capital_id','id');
+        }
+  """""capital model""""""
+         public function get_capital2(){
+    	 return $this->hasone('App\State','capital_id','id');
+        }
+
+
+
+
+

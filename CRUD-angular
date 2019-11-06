@@ -137,7 +137,7 @@ ___________________
 
         return this.http.get(this.baseApiUrl + '/employees_edit/' + $data);
     }
-	change_jrnlStatus($jnlid: string, $status: boolean) {
+	  change_jrnlStatus($jnlid: string, $status: boolean) {
 	    var jsonObject = {};
 	    jsonObject['jnlid'] = $jnlid;
 	    jsonObject['status'] = $status;
