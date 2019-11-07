@@ -1,6 +1,5 @@
        INPUT FEILD
        -----------
-        <div class="col-lg-6">
           <div class="form-group ">
             <mat-form-field class="mat-input " appearance="outline">
               <mat-label>name</mat-label>
