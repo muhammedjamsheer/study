@@ -1,0 +1,35 @@
+1)Angular material input checking if user is already exits
+
+	<div class="col-md-12">
+	<mat-form-field class="mat-input" appearance="outline">
+		<mat-label>{{ 'roles-form.role_name' | translate }}</mat-label>
+		<input (blur)="checkIfUserRoleExists($event.target.value)" matInput
+			type="text" formControlName="roleName"
+			placeholder="{{ 'roles-form.role_name' | translate }}"
+			[ngClass]="{ 'is-invalid': submitted && formfields.roleName.errors }">
+	</mat-form-field>
+	<span class="invalid-feedback force-show" ng-show="formfields.roleName.errors"
+		*ngIf="formfields.roleName.errors  && submitted">{{ 'roles-form.error_msg_rolename_valid' | translate }}</span>
+	<span class="invalid-feedback force-show" ng-show="userrole_exists"
+		*ngIf="userrole_exists">{{ 'roles-form.error_msg_rolename_exits' | translate}}</span>
+   </div>
+
+
+
+	checkIfUserRoleExists(value) {
+		if (value != '') {
+			this.userroleService.checkUserRoleExists(value, this.userrole_id).subscribe(
+				response => {
+					if (response['status'] === 400) {
+						this.userrole_exists = true;
+						
+					} else {
+						this.userrole_exists = false;
+					}
+				},
+				error => {
+					this.notifier.notify('error', 'Some error occured');
+				}
+			);
+		}
+	}

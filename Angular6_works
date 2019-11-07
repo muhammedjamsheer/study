@@ -86,5 +86,16 @@ Angular modal
 Angular loading spinner
    https://jsonworld.com/demo/add-loader-in-angular6-application  
 .................................................................
-
+Angular search 
+   <input type="text" (keyup)='search($event.target.value)'>
+   
+   search(term: string) {
+    if(!term) {
+      this.filterData = this.data;
+    } else {
+      this.filterData = this.data.filter(x => 
+         x.name.trim().toLowerCase().includes(term.trim().toLowerCase())
+      );
+    }
+  }
 
