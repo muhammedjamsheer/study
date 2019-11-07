@@ -120,13 +120,13 @@ ________________
 **********************************************************************************
 employee_service.ts
 ___________________
-	import { HttpClient } from '@angular/common/http';
-	constructor(private http: HttpClient,)
-
+   import { HttpClient } from '@angular/common/http';
+   constructor(private http: HttpClient,)
+    baseApiUrl= 'http://192.168.112.187/jwtauth/public/api/';
+    
     create_employee($data) {
         return this.http.post(this.baseApiUrl + '/create_employee', $data);
     }
-
     getall_employees($data) {
         return this.http.get(this.baseApiUrl + '/getall_employees', $data);
     }
@@ -134,15 +134,14 @@ ___________________
         return this.http.get(this.baseApiUrl + '/delete_employees/' + $id);
     }
     employees_edit($data) {
-
         return this.http.get(this.baseApiUrl + '/employees_edit/' + $data);
     }
-	  change_jrnlStatus($jnlid: string, $status: boolean) {
-	    var jsonObject = {};
-	    jsonObject['jnlid'] = $jnlid;
-	    jsonObject['status'] = $status;
-	    return this.http.post(this.env.baseAPIUrl + '/change_jrnlStatus', jsonObject);
-	}
+    change_jrnlStatus($jnlid: string, $status: boolean) {
+	 var jsonObject = {};
+	 jsonObject['jnlid'] = $jnlid;
+	 jsonObject['status'] = $status;
+	 return this.http.post(this.env.baseAPIUrl + '/change_jrnlStatus', jsonObject);
+     }
 
 
 
