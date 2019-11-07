@@ -1,13 +1,20 @@
+app.module.ts
+_____________
+import { ReactiveFormsModule }    from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+
+
 employee_create.component.html
 ______________________
 
-          <div class="col-lg-6">
-            <div class="image-section">
-              <img class="img-thumbnail" *ngIf="url !=''" [src]="url" width="100px">
-              <input type="file" id="image" (change)="onSelectedFile($event)" />
-              <div [innerHTML]="uploadError" class="error"></div>
-            </div>
-          </div>
+  <div class="col-lg-6">
+    <div class="image-section">
+      <img class="img-thumbnail" *ngIf="url !=''" [src]="url" width="100px">
+      <input type="file" id="image" (change)="onSelectedFile($event)" />
+      <div [innerHTML]="uploadError" class="error"></div>
+    </div>
+  </div>
 
 *******************************************************************************
 employee_create.component.ts
