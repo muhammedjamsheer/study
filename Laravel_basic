@@ -2,7 +2,7 @@
 
 laravel installation
 ..............................
-	composer create-project --prefer-dist laravel/laravel blog
+	composer create-project laravel/laravel project_name --prefer-dist
 	change env.example to .env
 	cd blog
 	php artisan serve
@@ -78,6 +78,7 @@ one to one relation(each state has one capital)
         }
 
 
-
+1.csv file upload in laravel
+     https://hdtuto.com/article/laravel-56-excel-and-csv-import-export-using-maatwebsite-example
 
 
