@@ -77,6 +77,7 @@
 
   MULTIPLE CHECKBOX DELETE
   ------------------------
+  https://stackblitz.com/edit/delete-rows-mat-table?file=app%2Ftable-selection-example.html
    <i (click)="removeSelectedRows()" class="material-icons">delete</i>
 
     <ng-container matColumnDef="select">
@@ -94,6 +95,9 @@
 
  app.component.ts
  ------------------
+    import { SelectionModel } from '@angular/cdk/collections';
+    selection = new SelectionModel<Owner>(true, []);
+   
     isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -108,7 +112,7 @@
     if (this.selection.selected.length) {
       this.notifier.notify('success', 'deleted');
     }
-    this.selection = new SelectionModel<Theaters>(true, []);
+    this.selection = new SelectionModel<Owner>(true, []);
   }
   masterToggle() {
     this.isAllSelected() ?
