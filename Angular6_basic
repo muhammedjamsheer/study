@@ -45,26 +45,6 @@ add angular material
     </mat-form-field>
    
 .............................................................
-routing
-
-
-
-   app-routing.module.ts
-   ----------------------
-   import { EmployeeComponent } from './employee/employee.component';
-    const routes: Routes = [
-    { path: '', component: EmployeeComponent },
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'lazymodule', loadChildren: './lazymodule/lazymodule.module#LazyModuleModule' }
-    ];
-
-
-    app.cpmponent.ts
-    ----------------
-    import { Router, ActivatedRoute } from '@angular/router';
-    constructor(private route: ActivatedRoute, private router: Router, )
-    this.router.navigate(['/home']);
-.............................................................
 Angular notifier
     npm install angular-notifier
 
