@@ -54,8 +54,9 @@
         res['all_movies'].forEach(element => {
           this.movies.push(element['movies']);
         });
-    });
-
+      });
+    }
+    
     BUTTON FAB
     ------------
     <div class="fab-container">
