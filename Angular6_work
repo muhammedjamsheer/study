@@ -41,6 +41,26 @@ component.ts
 	if (this.createUserRole.invalid || this.userrole_exists || this.roleshortname_exists) {
 		return;
 	}
+	
+	laravel conroller
+	...............................
+	public function checkIfJournalCodeExists($code)
+	    {
+		 $res = Journal::where('jnl_code', '=', $code)->first();
+		    if ($res === null){
+			$status = 200;
+			$message = 'New Journal code';
+			$message_type = "success";
+			return response()->json(compact('status', 'message', 'message_type'), 200);
+		    }
+		    else{
+			$status = 400;
+			$message = 'Journal code already exists';
+			$message_type = "error";
+			return response()->json(compact('result', 'status', 'message', 'message_type'), 200);
+		    }
+	    }
+    
 ========================================================================================================
 
 2) Angular search a table
