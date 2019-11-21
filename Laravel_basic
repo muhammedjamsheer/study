@@ -4,7 +4,7 @@ laravel installation
 ..............................
 	composer create-project laravel/laravel project_name --prefer-dist
 	change env.example to .env
-	cd blog
+	cd project_name
 	php artisan serve
 	php artisan key:generate
 
