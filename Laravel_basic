@@ -28,6 +28,14 @@ routing
 	Route::post('/delete/{id}', 'departmentController@destroy')->name('delete');
 
 
+env file
+............
+	DB_CONNECTION=mysql
+	DB_HOST=127.0.0.1
+	DB_PORT=3306
+	DB_DATABASE=employeeApp
+	DB_USERNAME=root
+	DB_PASSWORD=root123
 
 
 create
