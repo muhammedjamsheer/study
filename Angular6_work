@@ -1,4 +1,15 @@
-1)Angular material input checking if user is already exits
+1)validatons 
+      firstName: ['', Validators.required],
+      password: ['', Validators.required,Validators.minLength(6)],
+      mobile: ['',[Validators.required, Validators.pattern("^[0-9]*$")],],
+
+	 <span class="invalid-feedback force-show" ng-show="formfields.mobile.errors"  *ngIf="submitted &&formfields.mobile.errors">
+		<div  *ngIf="formfields.mobile.errors.required">mobile time name is required</div>
+		<div  *ngIf="formfields.mobile.errors.pattern">mobile must a number</div>
+		<div  *ngIf="formfields.mobile.errors.minLength">mobile must must be at least 6 characters</div>
+	  </span>
+
+2)Angular material input checking if user is already exits
 
    component.html
   ---------------
