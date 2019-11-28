@@ -38,6 +38,16 @@ env file
 	DB_PASSWORD=root123
 
 
+
+   typescript get unique values
+   ..............................
+	var uniqueNames = [];
+	for (var i = 0; i < res['date'].length; i++) {
+		if (uniqueNames.indexOf(res['date'][i].show_date) === -1) {
+		uniqueNames.push(res['date'][i].show_date);
+		}
+	}
+
 create
 ......................
 	$user = Userrole::create([
