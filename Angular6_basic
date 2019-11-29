@@ -71,4 +71,6 @@ Angular loading spinner
 .................................................................
 Angular cnofirmation popover
    https://www.npmjs.com/package/angular-confirmation-popover
-
+   
+array of multiple checkbox
+https://stackoverflow.com/questions/40927167/angular-reactiveforms-producing-an-array-of-checkbox-values
