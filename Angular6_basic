@@ -74,3 +74,6 @@ Angular cnofirmation popover
    
 array of multiple checkbox
 https://stackoverflow.com/questions/40927167/angular-reactiveforms-producing-an-array-of-checkbox-values
+
+pass data from one component to another
+https://angularfirebase.com/lessons/sharing-data-between-angular-components-four-methods/#Parent-to-Child-Sharing-Data-via-Input
