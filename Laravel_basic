@@ -101,3 +101,311 @@ one to one relation(each state has one capital)
 
 2.Laravel JWT Authentication
      https://appdividend.com/2018/02/24/laravel-jwt-authentication-tutorial/
+
+
+------------------------------------------------------------------------------------------------------------------
+
+view
+==============
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
+
+
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+    <style>
+.container{
+    margin-top:40px;
+}
+</style> 
+</head>
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="card">
+            <div class="card-header">Create Employee</div>
+                <form id="upload_form" >
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Name" >
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="text" name="email"  id="email" class="form-control" placeholder="Email" >
+                        </div>
+                            <div class="form-group">
+                            <input type="file" name="select_file" id="select_file" />
+                        </div>
+                    </div> 
+                        <div class="card-footer">        
+                            <div class="form-group">
+                                <input type="hidden"  name="employee_id"  id="employee_id"  >
+                                <button id="saveBtn" class="btn btn-primary btn-sm btn-submit">Submit</button>
+                            </div>
+                      </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="form-group">
+                 <input type="text" name="search" id="search" class="form-control" placeholder="Search Customer Data" />
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th >Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('#upload_form').on('submit', function(event){
+        event.preventDefault();
+        $.ajax({
+            url:'/save_employee',
+            method:"post",
+            data:new FormData(this),
+            dataType:'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data)
+            {
+                if(data.status=200){
+                    getData();
+                    toastr.success(data.message, 'Success Alert', {timeOut: 2000});
+                    $("#upload_form")[0].reset();
+                }
+            }
+        })
+    });
+
+    $(document).on('keyup', '#search', function(){
+        var query = $(this).val();
+        getData(query);
+    });
+            getData();
+    function getData(query='') {
+            $.ajax({
+            type:'get',
+            url:'/getall_employees',
+            data:{query:query},
+            dataType:'json',
+            success:function(data){
+
+                var	rows = '';
+                $.each (data, function (key, value) {
+                    rows = rows + '<tr>';
+                    rows = rows + '<td>'+value.name+'</td>';
+                    rows = rows + '<td>'+value.email+'</td>';
+                    rows = rows + '<td  data-id="'+value.id+'">';
+                    rows = rows + '<button data-toggle="modal" data-target="#edit-item" class="edit-item">Edit</button> ';
+                    rows = rows + '<button class=" remove-item">Delete</button>';
+                    rows = rows + '</td>';
+                    rows = rows + '</tr>';
+                    });
+
+                    $('tbody').html(rows);
+                }
+            });
+        }
+
+    $("body").on("click",".remove-item",function(){
+        var id = $(this).parent("td").data('id');
+            $.ajax({
+            type:'get',
+            url:'/delete_employees/'+id,
+            success:function(data){
+                if(data.status=200){
+                    getData();
+                    toastr.success('deleted succesfully', 'Success Alert', {timeOut: 2000});
+                }
+            }
+        });
+    });
+
+    $("body").on("click",".edit-item",function(){
+        var id = $(this).parent("td").data('id');
+
+        $.ajax({
+            type:'get',
+            url:'/edit_employee/'+id,
+            success:function(data){
+                if(data.status=200){
+
+            $('.card-header').html("Update Employee");
+            $('#saveBtn').html("Update");
+            $('#name').val(data.name);
+            $('#email').val(data.email);
+            $('#employee_id').val(data.id);
+                }
+            }
+        });
+    });
+
+
+});
+</script>
+
+======================api web=====================================================
+
+Route::get('employee', 'employeeController@employee');
+Route::post('/save_employee', 'employeeController@saveEmployee');
+Route::get('/getall_employees', 'employeeController@getall_employees');
+Route::get('delete_employees/{id}', 'employeeController@delete_employees');
+Route::get('edit_employee/{id}', 'employeeController@edit_employee');
+
+========================== controller ============================================
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Employee;
+use Validator;
+use DB;
+class employeeController extends Controller
+{
+    public function employee()
+    {
+        return view('employee');
+    }
+    public function saveEmployee(Request $request)
+    {
+        $supplier_name = $request->name;
+        $extension = $request->file('select_file');
+        if($extension){
+            $extension = $request->file('select_file')->getClientOriginalExtension(); 
+            $dir = 'images';
+            $filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+            $request->file('select_file')->move($dir, $filename);
+    
+        }
+        else{
+            $filename ='';
+        }
+
+        $form_data = array(
+            'name'=>$request['name'], 
+            'email'=>$request['email'],
+            'image' =>$filename,
+        );
+        
+        if($request->employee_id){
+            $update =  Employee::where('id', $request->employee_id)->update( $form_data);
+            if($update){
+                $status = 200; 
+                $message = 'employee Updated succesfully';
+                $message_type = "success";
+                return response()->json(compact('status', 'message', 'message_type'), 200);
+              }
+
+        }else{
+            $create = Employee::create($form_data);
+            if($create){
+                $status = 200; 
+                $message = 'Employee journal succesfully';
+                $message_type = "success";
+                return response()->json(compact('status', 'message', 'message_type'), 200);
+            }
+    
+        }
+
+    }
+    public function getall_employees(Request $request)
+    {
+        if($request->ajax())
+        {
+            $output = '';
+            $query = $request->get('query');
+            if($query != '')
+            {
+                $data = DB::table('employees')
+                ->where('name', 'like', '%'.$query.'%')
+                ->orWhere('email', 'like', '%'.$query.'%')
+                ->orderBy('name', 'desc')
+                ->get();
+            }
+            else
+            {
+                $data = DB::table('employees')
+                ->orderBy('name', 'desc')
+                ->get();
+            }
+            return response()->json( $data,200);
+        }
+    }
+    public function delete_employees($id){
+        $data=Employee::where('id',$id)->first();
+        $image_path = 'images/'.$data['image']; 
+
+        if(file_exists(public_path( $image_path))){
+            unlink(public_path( $image_path));
+            $data->delete();
+        }else{
+            dd('File does not exists.');
+        }
+        return response()->json( $data,200);
+    }
+    public function delete_crews($id){
+        $data = Crews::where('id',$id)->first();
+        $image_path = 'images/crews/'.$data['image']; 
+
+        if(file_exists(public_path('images/crews/'.$data['image']))){
+            unlink(public_path('images/crews/'.$data['image']));
+        }else{
+            dd('File does not exists.');
+        }
+        
+        $data->delete();
+        if($data){
+            $results['message_type'] = 'success';
+            $results['message'] = 'Crews deleted succesfully';
+        }
+        return response()->json( $results);
+    }
+    public function edit_employee($id)
+    {
+       $data=Employee::where('id',$id)->first();
+       return response()->json( $data,200);
+    }
+}
+==================================== model ==============================================
+
+class Employee extends Model
+{
+    protected $table = 'employees';
+    protected $fillable = [
+        'name', 'email', 'image'
+    ];
+}
