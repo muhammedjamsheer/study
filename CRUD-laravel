@@ -120,7 +120,31 @@ label.error {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
- 
+   ____________________________________________________________________________________________________ 
+   <div class="col-md-10 col-sm-9" id="facility_name_group">
+     <input type="text" class="form-control" id="facility_name" placeholder="Facility">
+    </div>
+			    
+    	var facility_name =$("#facility_name").val();
+        var facility_descp =$("#facility_descp").val(); 
+        //validate here        
+        $(".ser_error_msg").remove();
+        var flag =0;
+        if(facility_name == "")
+        {
+            flag =1;
+            $("#facility_name_group").append("<span class='ser_error_msg'>Facility required</span>");
+        }
+        if(facility_descp == "")
+        {
+            flag =1;
+            $("#facility_descp_group").append("<span class='ser_error_msg'>Description required</span>");
+        }
+        if(flag ==0)
+        {
+	ajax code here
+	}
+ _____________________________________________________________________________________________________
     $("#ajax_form").validate({
     rules: {
       name: {
