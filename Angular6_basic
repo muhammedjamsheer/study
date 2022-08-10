@@ -1,3 +1,7 @@
+
+ ng g m my-feature --module app.module --route feature
+
+
 ANGULAR6
 .............................................................
 install angular
